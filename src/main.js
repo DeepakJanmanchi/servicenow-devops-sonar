@@ -5,8 +5,9 @@ const axios = require('axios');
 (async function main() {
     let instanceUrl = core.getInput('instance-url', { required: true });
     const toolId = core.getInput('tool-id', { required: true });
-    const username = core.getInput('devops-integration-user-name', { required: true });
-    const password = core.getInput('devops-integration-user-password', { required: true });
+    const username = core.getInput('devops-integration-user-name', { required: false });
+    const password = core.getInput('devops-integration-user-password', { required: false });
+    const securityToken = core.getInput('devops-security-token', { required: false });
     const jobname = core.getInput('job-name', { required: true });
     const projectKey = core.getInput('sonar-project-key', { required: true });
     let sonarUrl = core.getInput('sonar-host-url', { required: true });
@@ -52,20 +53,38 @@ const axios = require('axios');
     }
 
     let result;
-    const endpoint = `${instanceUrl}/api/sn_devops/devops/tool/softwarequality?toolId=${toolId}`;
-
+    const endpointv1 = `${instanceUrl}/api/sn_devops/devops/tool/softwarequality?toolId=${toolId}`;
+    const endpointv2 = `${instanceUrl}/api/sn_devops/v2/devops/tool/softwarequality?toolId=${toolId}&ni.nolog.token=${secretToken}`;
+    let endpoint;
+    let httpHeaders;
     try {
-        const token = `${username}:${password}`;
-        const encodedToken = Buffer.from(token).toString('base64');
-
-        const defaultHeaders = {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': 'Basic ' + `${encodedToken}`
-        };
-
-        let httpHeaders = { headers: defaultHeaders };
-        result = await axios.post(endpoint, JSON.stringify(payload), httpHeaders);
+        if (secretToken) {
+            const defaultHeadersv2 = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': `${secretToken}`
+            };
+            httpHeaders = {
+                headers: defaultHeadersv2
+            };
+            endpoint = endpointv2;
+        }
+        else if (username && password) {
+            const token = `${username}:${password}`;
+            const encodedToken = Buffer.from(token).toString('base64');
+            const defaultHeadersv1 = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': 'Basic ' + `${encodedToken}`
+            };
+            httpHeaders = {
+                headers: defaultHeadersv1
+            };
+            endpoint = endpointv1;
+        } else {
+            throw "Credentials are empty";
+        }
+        snowResponse = await axios.post(endpoint, JSON.stringify(payload), httpHeaders);
     } catch (e) {
         if (e.message.includes('ECONNREFUSED') || e.message.includes('ENOTFOUND') || e.message.includes('405')) {
             core.setFailed('ServiceNow Instance URL is NOT valid. Please correct the URL and try again.');
@@ -77,3 +96,4 @@ const axios = require('axios');
     }
     
 })();
+
