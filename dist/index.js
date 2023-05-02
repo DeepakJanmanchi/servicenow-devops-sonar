@@ -113,8 +113,8 @@ const axios = __nccwpck_require__(986);
     }
 
     let result;
-    const endpointv1 = `${instanceUrl}/api/sn_devops/devops/tool/softwarequality?toolId=${toolId}`;
-    const endpointv2 = `${instanceUrl}/api/sn_devops/v2/devops/tool/softwarequality?toolId=${toolId}&ni.nolog.token=${secretToken}`;
+    const endpointv1 = `${instanceUrl}/api/sn_devops/v1/devops/tool/softwarequality?toolId=${toolId}`;
+    const endpointv2 = `${instanceUrl}/api/sn_devops/devops/tool/softwarequality?toolId=${toolId}`;
     let endpoint;
     let httpHeaders;
     try {
@@ -122,7 +122,7 @@ const axios = __nccwpck_require__(986);
             const defaultHeadersv2 = {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'Authorization': `${secretToken}`
+                'Authorization': 'sn_devops.CustomTokenPublic '+`${secretToken}`+' '+`${toolId}`
             };
             httpHeaders = {
                 headers: defaultHeadersv2
