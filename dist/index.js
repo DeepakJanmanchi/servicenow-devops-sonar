@@ -63,16 +63,19 @@ const axios = __nccwpck_require__(986);
 
 
 (async function main() {
+    
+    console.log("i'm here");
     let instanceUrl = core.getInput('instance-url', { required: true });
     const toolId = core.getInput('tool-id', { required: true });
     const username = core.getInput('devops-integration-user-name', { required: false });
     const password = core.getInput('devops-integration-user-password', { required: false });
-    const securityToken = core.getInput('devops-security-token', { required: false });
+    const secretToken = core.getInput('devops-security-token', { required: false });
     const jobname = core.getInput('job-name', { required: true });
     const projectKey = core.getInput('sonar-project-key', { required: true });
     let sonarUrl = core.getInput('sonar-host-url', { required: true });
 
     let githubContext = core.getInput('context-github', { required: true });
+    console.log("Secret Token: "+secretToken+" ,username "+username);
 
     try {
         githubContext = JSON.parse(githubContext);
