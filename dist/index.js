@@ -5224,6 +5224,7 @@ const axios = __nccwpck_require__(4616);
                 headers: defaultHeadersv2
             };
             endpoint = endpointv2;
+            console.log("Secret Token if code ");
         }
         else if (username && password) {
             const token = `${username}:${password}`;
@@ -5237,9 +5238,11 @@ const axios = __nccwpck_require__(4616);
                 headers: defaultHeadersv1
             };
             endpoint = endpointv1;
+            console.log("username and password if code ");
         } else {
             throw "Credentials are empty";
         }
+        console.log("endpoint: "+endpoint);
         snowResponse = await axios.post(endpoint, JSON.stringify(payload), httpHeaders);
     } catch (e) {
         if (e.message.includes('ECONNREFUSED') || e.message.includes('ENOTFOUND') || e.message.includes('405')) {
