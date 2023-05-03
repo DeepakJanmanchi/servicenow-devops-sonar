@@ -13,7 +13,7 @@ jobs:
           # devops-integration-user-name: ${{ secrets.SN_DEVOPS_USER }}
           devops-integration-user-name: 'devops.integration.user'
           # devops-integration-user-password: ${{ secrets.SN_DEVOPS_PASSWORD }}
-           devops-integration-user-password: 'admin'
+          devops-integration-user-password: 'admin'
           devops-security-token: ${{ secrets.SECRET_TOKENS3 }}
           instance-url: ${{ secrets.SN_INSTANCE_URL }}
           tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
