@@ -8,18 +8,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ServiceNow DevOps Sonar Scan Results
-        uses: ServiceNow/servicenow-devops-sonar@main
+        uses: DeepakJanmanchi/servicenow-devops-sonar@main
         with:
-          # devops-integration-user-name: ${{ secrets.SN_DEVOPS_USER }}
+          devops-integration-user-name: ${{ secrets.SN_DEVOPS_USER }}
 #           devops-integration-user-name: 'devops.integration.user'
-          # devops-integration-user-password: ${{ secrets.SN_DEVOPS_PASSWORD }}
+          devops-integration-user-password: ${{ secrets.SN_DEVOPS_PASSWORD }}
 #           devops-integration-user-password: 'admin'
           devops-security-token: ${{ secrets.SECRET_TOKENS3 }}
           instance-url: ${{ secrets.SN_INSTANCE_URL }}
           tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
           context-github: ${{ toJSON(github) }}
           job-name: 'Build'
-          sonar-host-url: 'dummy'
-          sonar-project-key: 'dummy'
+          sonar-host-url: 'https://sonarcloud.io'
+          sonar-project-key: '96f2cc0363e825eb416ff9f400ad416afc675fe3'
 #           sonar-host-url: ${{ secrets.SONAR_URL }}
 #           sonar-project-key: ${{ secrets.SONAR_PROJECT_KEY }}
