@@ -19,5 +19,7 @@ jobs:
           tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
           context-github: ${{ toJSON(github) }}
           job-name: 'Build'
-          sonar-host-url: ${{ secrets.SONAR_URL }}
-          sonar-project-key: ${{ secrets.SONAR_PROJECT_KEY }}
+          sonar-host-url: 'dummy'
+          sonar-project-key: 'dummy'
+#           sonar-host-url: ${{ secrets.SONAR_URL }}
+#           sonar-project-key: ${{ secrets.SONAR_PROJECT_KEY }}
