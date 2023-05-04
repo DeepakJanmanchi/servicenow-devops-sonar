@@ -63,6 +63,7 @@ const axios = require('axios');
     try {
         if (secretToken) {
             const base64EncodedSignature = CertificateEncryption.generateMac(gs.base64Encode(secretToken), HmacSHA256, payload);
+            console.log(base64EncodedSignature);
             const defaultHeadersv2 = {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
