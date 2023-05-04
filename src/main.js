@@ -63,7 +63,7 @@ const axios = require('axios');
     
     function _prepareSignature(secret, payload, shaAlgorithm) {
         var base64EncodedSignature = CertificateEncryption.generateMac(gs.base64Encode(secret), shaAlgorithm, payload);
-        return this._base64toHex(base64EncodedSignature);
+        return _base64toHex(base64EncodedSignature);
     }
 
     function _base64toHex(base64Signatrue) {
@@ -115,7 +115,7 @@ const axios = require('axios');
   
             const shaAlgorithm = 'HmacSHA256';
             console.log("payload: "+JSON.stringify(payload));
-            const calculateSignature = this._prepareSignature(secretToken, JSON.stringify(payload), shaAlgorithm);
+            const calculateSignature = _prepareSignature(secretToken, JSON.stringify(payload), shaAlgorithm);
             console.log("signature: "+calculateSignature);
             calculateSignature = 'sha256=' + calculateSignature;
             const defaultHeadersv2 = {
