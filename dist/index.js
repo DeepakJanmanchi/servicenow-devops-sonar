@@ -5215,11 +5215,13 @@ const axios = __nccwpck_require__(4616);
     let httpHeaders;
     try {
         if (secretToken) {
+            const base64EncodedSignature = CertificateEncryption.generateMac(gs.base64Encode(secretToken), HmacSHA256, payload);
             const defaultHeadersv2 = {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                 'Authorization': 'sn_devops.DevOpsToken '+`${secretToken}`+' '+`${toolId}`,
-                 'token': `${ni.nolog.token}`
+                // 'Authorization': 'sn_devops.DevOpsToken '+`${secretToken}`+' '+`${toolId}`,
+                'x-hub-signature-256': `${base64EncodedSignature}`
+                //  'token': `${ni.nolog.token}`
                 //'Authorization': 'x-hub-signature-256 '+`${secretToken}`
             };
             httpHeaders = {
