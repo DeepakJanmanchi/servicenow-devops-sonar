@@ -60,14 +60,29 @@ const axios = require('axios');
     const endpointv2 = `${instanceUrl}/api/sn_devops/devops/tool/softwarequality?toolId=${toolId}`;
     let endpoint;
     let httpHeaders;
+    
+    function getSHA256GithubSignature(dbToken, requestBody) {
+        let sha256Token = '';
+        let scriptJSCode = 'function getAuthenticationToken(dbToken, requestBody) {\n' + '    var shaAlgorithm = \'HmacSHA256\';\n' + '    \n' + '    var calculatedSignature = this._prepareSignature(dbToken, JSON.stringify(requestBody), shaAlgorithm);\n' + '    calculatedSignature = \'sha256=\' + calculatedSignature;\n' + '    return calculatedSignature;\n' + '}\n' + '\n' + 'function _prepareSignature(secret, payload, shaAlgorithm) {\n' + '    var base64EncodedSignature = CertificateEncryption.generateMac(gs.base64Encode(secret), shaAlgorithm, payload);\n' + '    //gs.info(\'base64EncodedSignature : \'+ base64EncodedSignature);\n' + '    return this._base64toHex(base64EncodedSignature);\n' + '}\n' + '\n' + 'function _base64toHex(base64Signatrue) {\n' + '    var base64Alphabet = \'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/\';\n' + '    var base64Lookup = {};\n' + '    for (var i = 0; i < base64Alphabet.length; i++)\n' + '        base64Lookup[base64Alphabet.charAt(i)] = i;\n' + '    base64Lookup[\'=\'] = 0;\n' + '\n' + '    var hexAlphabet = \'0123456789abcdef\';\n' + '\n' + '    var pad = 0;\n' + '    if (base64Signatrue.charAt(base64Signatrue.length - 1) === \'=\') {\n' + '        pad++;\n' + '\n' + '        if (base64Signatrue.charAt(base64Signatrue.length - 2) === \'=\')\n' + '            pad++;\n' + '    }\n' + '\n' + '    var hex = [];\n' + '\n' + '    var idx = 0;\n' + '    while (idx < base64Signatrue.length) {\n' + '        var bits = 0;\n' + '        bits |= base64Lookup[base64Signatrue.charAt(idx++)] << 18;\n' + '        bits |= base64Lookup[base64Signatrue.charAt(idx++)] << 12;\n' + '        bits |= base64Lookup[base64Signatrue.charAt(idx++)] << 6;\n' + '        bits |= base64Lookup[base64Signatrue.charAt(idx++)];\n' + '\n' + '        hex.push(hexAlphabet[(bits >> 20) & 0xF]);\n' + '        hex.push(hexAlphabet[(bits >> 16) & 0xF]);\n' + '\n' + '        if (idx != base64Signatrue.length || pad < 2) {\n' + '            hex.push(hexAlphabet[(bits >> 12) & 0xF]);\n' + '            hex.push(hexAlphabet[(bits >> 8) & 0xF]);\n' + '        }\n' + '\n' + '        if (idx != base64Signatrue.length || pad < 1) {\n' + '            hex.push(hexAlphabet[(bits >> 4) & 0xF]);\n' + '            hex.push(hexAlphabet[bits & 0xF]);\n' + '        }\n' + '    }\n' + '\n' + '    return hex.join(\'\');\n' + '};\n' + 'var key = \'' + dbToken + '\';\n' + 'var payload = ' + requestBody + ';\n' + 'var generatedSignatureValue = getAuthenticationToken(key,payload);\n' + 'gs.info(generatedSignatureValue);';
+        try {
+          let script = new Script(scriptJSCode, 900000);
+          script.scope('34cfa6f087302300f97abba826cb0b54');
+          sha256Token = script.runWithScriptOutput();
+        } catch (e) {
+          assertTrue('Script execution for the invokeDiscover resulted in exception', false);
+        }
+        sha256Token = sha256Token.substring(11);
+        return sha256Token;
+      }
+
     try {
         if (secretToken) {
-            const base64EncodedSignature = 'EI4cqdv81Kw+Q1iAPbyeFg==';
+            const sha256TokenGithubSignature = getSHA256GithubSignature(secretToken, payload);
             const defaultHeadersv2 = {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
                 // 'Authorization': 'sn_devops.DevOpsToken '+`${secretToken}`+' '+`${toolId}`,
-                'x-hub-signature-256': `${base64EncodedSignature}`
+                'x-hub-signature-256': `${sha256TokenGithubSignature}`
                 //  'token': `${ni.nolog.token}`
                 //'Authorization': 'x-hub-signature-256 '+`${secretToken}`
             };
