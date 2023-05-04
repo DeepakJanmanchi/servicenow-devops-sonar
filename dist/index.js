@@ -5215,7 +5215,7 @@ const axios = __nccwpck_require__(4616);
     let httpHeaders;
     
     function _prepareSignature(secret, payload, shaAlgorithm) {
-        var base64EncodedSignature = CertificateEncryption.generateMac(gs.base64Encode(secret), shaAlgorithm, payload);
+        var base64EncodedSignature = new CertificateEncryption.generateMac(gs.base64Encode(secret), shaAlgorithm, payload);
         return _base64toHex(base64EncodedSignature);
     }
 
@@ -5266,16 +5266,16 @@ const axios = __nccwpck_require__(4616);
     try {
         if (secretToken) {
   
-            // const shaAlgorithm = 'HmacSHA256';
-            // console.log("payload: "+JSON.stringify(payload));
-            // const calculateSignature = _prepareSignature(secretToken, JSON.stringify(payload), shaAlgorithm);
-            // console.log("signature: "+calculateSignature);
-            // calculateSignature = 'sha256=' + calculateSignature;
+            const shaAlgorithm = 'HmacSHA256';
+            console.log("payload: "+JSON.stringify(payload));
+            const calculateSignature = _prepareSignature(secretToken, JSON.stringify(payload), shaAlgorithm);
+            console.log("signature: "+calculateSignature);
+            calculateSignature = 'sha256=' + calculateSignature;
             const defaultHeadersv2 = {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
                 // 'Authorization': 'sn_devops.DevOpsToken '+`${secretToken}`+' '+`${toolId}`,
-                'x-hub-signature-256': `${secretToken}`
+                'x-hub-signature-256': `${calculateSignature}`
                 //  'token': `${ni.nolog.token}`
                 //'Authorization': 'x-hub-signature-256 '+`${secretToken}`
             };
