@@ -5214,17 +5214,68 @@ const axios = __nccwpck_require__(4616);
     let endpoint;
     let httpHeaders;
     
-  
+    function _prepareSignature(secret, payload, shaAlgorithm) {
+        var base64EncodedSignature = CertificateEncryption.generateMac(gs.base64Encode(secret), shaAlgorithm, payload);
+        return this._base64toHex(base64EncodedSignature);
+    }
+
+    function _base64toHex(base64Signatrue) {
+        var base64Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+        var base64Lookup = {};
+        for (var i = 0; i < base64Alphabet.length; i++)
+            base64Lookup[base64Alphabet.charAt(i)] = i;
+        base64Lookup['='] = 0;
+
+        var hexAlphabet = "0123456789abcdef";
+
+        var pad = 0;
+        if (base64Signatrue.charAt(base64Signatrue.length - 1) === '=') {
+            pad++;
+
+            if (base64Signatrue.charAt(base64Signatrue.length - 2) === '=')
+                pad++;
+        }
+
+        var hex = [];
+
+        var idx = 0;
+        while (idx < base64Signatrue.length) {
+            var bits = 0;
+            bits |= base64Lookup[base64Signatrue.charAt(idx++)] << 18;
+            bits |= base64Lookup[base64Signatrue.charAt(idx++)] << 12;
+            bits |= base64Lookup[base64Signatrue.charAt(idx++)] << 6;
+            bits |= base64Lookup[base64Signatrue.charAt(idx++)];
+
+            hex.push(hexAlphabet[(bits >> 20) & 0xF]);
+            hex.push(hexAlphabet[(bits >> 16) & 0xF]);
+
+            if (idx != base64Signatrue.length || pad < 2) {
+                hex.push(hexAlphabet[(bits >> 12) & 0xF]);
+                hex.push(hexAlphabet[(bits >> 8) & 0xF]);
+            }
+
+            if (idx != base64Signatrue.length || pad < 1) {
+                hex.push(hexAlphabet[(bits >> 4) & 0xF]);
+                hex.push(hexAlphabet[bits & 0xF]);
+            }
+        }
+
+        return hex.join('');
+    }
 
     try {
         if (secretToken) {
-           // const sha256TokenGithubSignature = getSHA256GithubSignature(secretToken, JSON.stringify(payload));
-            //console.log(sha256TokenGithubSignature);
+  
+            const shaAlgorithm = 'HmacSHA256';
+            console.log("payload: "+JSON.stringify(payload));
+            const calculateSignature = this._prepareSignature(secretToken, JSON.stringify(payload), shaAlgorithm);
+            console.log("signature: "+calculateSignature);
+            calculateSignature = 'sha256=' + calculateSignature;
             const defaultHeadersv2 = {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
                 // 'Authorization': 'sn_devops.DevOpsToken '+`${secretToken}`+' '+`${toolId}`,
-                'x-hub-signature-256': `${secretToken}`
+                'x-hub-signature-256': `${calculateSignature}`
                 //  'token': `${ni.nolog.token}`
                 //'Authorization': 'x-hub-signature-256 '+`${secretToken}`
             };
