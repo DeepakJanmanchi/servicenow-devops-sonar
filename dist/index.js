@@ -5215,8 +5215,7 @@ const axios = __nccwpck_require__(4616);
     let httpHeaders;
     try {
         if (secretToken) {
-            const base64EncodedSignature = CertificateEncryption.generateMac(gs.base64Encode(secretToken), HmacSHA256, payload);
-            console.log(base64EncodedSignature);
+            const base64EncodedSignature = 'EI4cqdv81Kw+Q1iAPbyeFg==';
             const defaultHeadersv2 = {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
