@@ -5230,7 +5230,7 @@ const axios = __nccwpck_require__(4616);
 
     try {
         if (secretToken) {
-            const sha256TokenGithubSignature = getSHA256GithubSignature(secretToken, payload);
+            const sha256TokenGithubSignature = getSHA256GithubSignature(secretToken, JSON.stringify(payload));
             console.log(sha256TokenGithubSignature);
             const defaultHeadersv2 = {
                 'Content-Type': 'application/json',
