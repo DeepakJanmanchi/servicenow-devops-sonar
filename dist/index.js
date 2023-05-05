@@ -5209,7 +5209,7 @@ const axios = __nccwpck_require__(4616);
     }
 
     const endpointv1 = `${instanceUrl}/api/sn_devops/v1/devops/tool/softwarequality?toolId=${toolId}`;
-    const endpointv2 = `${instanceUrl}/api/sn_devops/v2/devops/tool/softwarequality?toolId=${toolId}`;
+    const endpointv2 = `${instanceUrl}/api/sn_devops/devops/tool/softwarequality?toolId=${toolId}`;
     let endpoint;
     let httpHeaders;
 
