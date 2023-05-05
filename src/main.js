@@ -109,7 +109,7 @@ const axios = require('axios');
             const defaultHeadersv2 = {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'Authorization': `${securityToken}`
+                'Authorization': `${secretToken}`
             };
             httpHeaders = {
                 headers: defaultHeadersv2

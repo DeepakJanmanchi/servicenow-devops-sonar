@@ -5262,7 +5262,7 @@ const axios = __nccwpck_require__(4616);
             const defaultHeadersv2 = {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'Authorization': `${securityToken}`
+                'Authorization': `${secretToken}`
             };
             httpHeaders = {
                 headers: defaultHeadersv2
