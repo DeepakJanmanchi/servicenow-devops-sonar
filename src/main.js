@@ -65,8 +65,8 @@ const axios = require('axios');
         } else if (secretToken) {
             const defaultHeadersv2 = {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
-               // 'Authorization': `${secretToken}`
+                'Accept': 'application/json',
+                'Authorization': `${secretToken}`
             };
             httpHeaders = {
                 headers: defaultHeadersv2

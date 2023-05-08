@@ -5218,8 +5218,8 @@ const axios = __nccwpck_require__(4616);
         } else if (secretToken) {
             const defaultHeadersv2 = {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
-               // 'Authorization': `${secretToken}`
+                'Accept': 'application/json',
+                'Authorization': `${secretToken}`
             };
             httpHeaders = {
                 headers: defaultHeadersv2
