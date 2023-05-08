@@ -5157,7 +5157,6 @@ const axios = __nccwpck_require__(4616);
 
 (async function main() {
     
-    console.log("i'm here");
     let instanceUrl = core.getInput('instance-url', { required: true });
     const toolId = core.getInput('tool-id', { required: true });
     const username = core.getInput('devops-integration-user-name', { required: false });
@@ -5168,7 +5167,6 @@ const axios = __nccwpck_require__(4616);
     let sonarUrl = core.getInput('sonar-host-url', { required: true });
 
     let githubContext = core.getInput('context-github', { required: true });
-    console.log("Secret Token: "+secretToken+" ,username "+username);
 
     try {
         githubContext = JSON.parse(githubContext);
@@ -5213,47 +5211,6 @@ const axios = __nccwpck_require__(4616);
     let endpoint;
     let httpHeaders;
 
-    // try {
-    //     if (secretToken) {
-  
-    //         const defaultHeadersv2 = {
-    //             'Content-Type': 'application/json',
-    //             'Accept': 'application/json',
-    //             'Authorization': `${secretToken}`
-    //         };
-    //         httpHeaders = {
-    //             headers: defaultHeadersv2
-    //         };
-    //         endpoint = endpointv2;
-    //         console.log("Secret Token if code ");
-    //     }
-    //     else if (username && password) {
-    //         const token = `${username}:${password}`;
-    //         const encodedToken = Buffer.from(token).toString('base64');
-    //         const defaultHeadersv1 = {
-    //             'Content-Type': 'application/json',
-    //             'Accept': 'application/json',
-    //             'Authorization': 'Basic ' + `${encodedToken}`
-    //         };
-    //         httpHeaders = {
-    //             headers: defaultHeadersv1
-    //         };
-    //         endpoint = endpointv1;
-    //         console.log("username and password if code ");
-    //     } else {
-    //         throw "Credentials are empty";
-    //     }
-    //     console.log("endpoint: "+endpoint);
-    //     snowResponse = await axios.post(endpoint, JSON.stringify(payload), httpHeaders);
-    // } catch (e) {
-    //     if (e.message.includes('ECONNREFUSED') || e.message.includes('ENOTFOUND') || e.message.includes('405')) {
-    //         core.setFailed('ServiceNow Instance URL is NOT valid. Please correct the URL and try again.');
-    //     } else if (e.message.includes('401')) {
-    //         core.setFailed('Invalid Credentials. Please correct the credentials and try again.');
-    //     } else {
-    //         core.setFailed(`ServiceNow Software Quality Results are NOT created. Please check ServiceNow logs for more details.`);
-    //     }
-    // }
     try {
         if (!secretToken && !username && !password) {
             core.setFailed('Either secret token or integration username, password is needed for integration user authentication');
@@ -5261,8 +5218,8 @@ const axios = __nccwpck_require__(4616);
         } else if (secretToken) {
             const defaultHeadersv2 = {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': `${secretToken}`
+                'Accept': 'application/json'
+               // 'Authorization': `${secretToken}`
             };
             httpHeaders = {
                 headers: defaultHeadersv2
