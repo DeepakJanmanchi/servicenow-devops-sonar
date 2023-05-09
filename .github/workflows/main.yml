@@ -18,5 +18,5 @@ jobs:
           context-github: ${{ toJSON(github) }}
           job-name: 'Build'
           sonar-host-url: 'https://sonarcloud.io'
-          sonar-project-key: '96f2cc0363e825eb416ff9f400ad416afc675fe3'
+          sonar-project-key: ${{ secrets.SN_PROJECT_KEY }}
           
