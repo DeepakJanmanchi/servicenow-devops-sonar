@@ -48,29 +48,41 @@ jobs:
       - name: Maven Build
         run: mvn clean install -DskipTests=true
         
-      - name: Sonar Cloud Analysis
-        if: success() # always() failure() success()
-        run: >
-            mvn -B verify -DskipTests sonar:sonar
-            -Dsonar.projectKey=$SONAR_PROJECT_KEY
-            -Dsonar.host.url=$SONAR_URL
-            -Dsonar.login=$SONAR_TOKEN
-        env:
-            GITHUB_TOKEN: ${{ secrets.GHP_TOKEN }}
-            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-            SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
-            SONAR_URL: ${{ secrets.SONAR_URL }}
+#       - name: Sonar Cloud Analysis
+#         if: success() # always() failure() success()
+#         run: >
+#             mvn -B verify -DskipTests sonar:sonar
+#             -Dsonar.projectKey=$SONAR_PROJECT_KEY
+#             -Dsonar.host.url=$SONAR_URL
+#             -Dsonar.login=$SONAR_TOKEN
+#         env:
+#             GITHUB_TOKEN: ${{ secrets.GHP_TOKEN }}
+#             SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#             SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+#             SONAR_URL: ${{ secrets.SONAR_URL }}
             
-      - name: ServiceNow DevOps Sonar Scan Results
-        uses: ServiceNow/servicenow-devops-sonar@scratch_STRY55387793
+#       - name: ServiceNow DevOps Sonar Scan Results
+#         uses: ServiceNow/servicenow-devops-sonar@scratch_STRY55387793
+#         with:
+#           devops-integration-user-name: ${{ secrets.SN_DEVOPS_USER }}
+#           devops-integration-token: ${{ secrets.SN_DEVOPS_USER }}
+#           devops-integration-user-password: ${{ secrets.SN_DEVOPS_SECRET }}
+#           instance-url: ${{ secrets.SN_INSTANCE_URL }}
+#           tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
+#           job-name: 'Build'
+#           context-github: ${{ toJSON(github) }}
+#           sonar-host-url: ${{ secrets.SONAR_URL }}
+#           sonar-project-key: ${{ secrets.SONAR_PROJECT_KEY }}
+
+      - name: ServiceNow Test Action Report
+        uses: DeepakJanmanchi/servicenow-devops-test-report@main
         with:
           devops-integration-user-name: ${{ secrets.SN_DEVOPS_USER }}
-          devops-integration-token: ${{ secrets.SN_DEVOPS_USER }}
-          devops-integration-user-password: ${{ secrets.SN_DEVOPS_SECRET }}
+          devops-integration-user-password: ${{ secrets.SN_DEVOPS_PASSWORD }}
+          devops-integration-token: ${{ secrets.SN_DEVOPS_SECRET }}
           instance-url: ${{ secrets.SN_INSTANCE_URL }}
           tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
-          job-name: 'Build'
           context-github: ${{ toJSON(github) }}
-          sonar-host-url: ${{ secrets.SONAR_URL }}
-          sonar-project-key: ${{ secrets.SONAR_PROJECT_KEY }}
+          job-name: 'Build'
+          xml-report-filename: target/surefire-reports/testng-results.xml
       
