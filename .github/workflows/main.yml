@@ -22,57 +22,57 @@
 #           sonar-project-key: ${{ secrets.SONAR_PROJECT_KEY }}
           
 
-name: DeepakSonar
+# name: DeepakSonar
     
-on:
-#   push:
-#     branches: ['master']
-#   pull_request:
-#     branches: ['master']
-  workflow_dispatch:
+# on:
+# #   push:
+# #     branches: ['master']
+# #   pull_request:
+# #     branches: ['master']
+#   workflow_dispatch:
 
-jobs:
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    steps:
+# jobs:
+#   build:
+#     name: Build
+#     runs-on: ubuntu-latest
+#     steps:
 
-      - name: Checkout Code
-        uses: actions/checkout@v2
+#       - name: Checkout Code
+#         uses: actions/checkout@v2
       
-      - name: Setup JDK 11 for Sonar Cloud
-        uses: actions/setup-java@v1
-        with:
-            java-version: 11
+#       - name: Setup JDK 11 for Sonar Cloud
+#         uses: actions/setup-java@v1
+#         with:
+#             java-version: 11
       
-      - name: Maven Build
-        run: mvn clean install -DskipTests=true
+#       - name: Maven Build
+#         run: mvn clean install -DskipTests=true
         
-      - name: Sonar Cloud Analysis
-        if: success() # always() failure() success()
-        run: >
-            mvn -B verify -DskipTests sonar:sonar
-            -Dsonar.projectKey=$SONAR_PROJECT_KEY
-            -Dsonar.host.url=$SONAR_URL
-            -Dsonar.login=$SONAR_TOKEN
-        env:
-            GITHUB_TOKEN: ${{ secrets.GHP_TOKEN }}
-            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-            SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
-            SONAR_URL: ${{ secrets.SONAR_URL }}
+#       - name: Sonar Cloud Analysis
+#         if: success() # always() failure() success()
+#         run: >
+#             mvn -B verify -DskipTests sonar:sonar
+#             -Dsonar.projectKey=$SONAR_PROJECT_KEY
+#             -Dsonar.host.url=$SONAR_URL
+#             -Dsonar.login=$SONAR_TOKEN
+#         env:
+#             GITHUB_TOKEN: ${{ secrets.GHP_TOKEN }}
+#             SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#             SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+#             SONAR_URL: ${{ secrets.SONAR_URL }}
             
-      - name: ServiceNow DevOps Sonar Scan Results
-        uses: ServiceNow/servicenow-devops-sonar@main
-        with:
-          devops-integration-user-name: ${{ secrets.SN_DEVOPS_USER }}
-          devops-integration-token: ${{ secrets.SN_DEVOPS_SECRET }}
-          devops-integration-user-password: ${{ secrets.SN_DEVOPS_PASSWORD }}
-          instance-url: ${{ secrets.SN_INSTANCE_URL }}
-          tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
-          job-name: 'Build'
-          context-github: ${{ toJSON(github) }}
-          sonar-host-url: ${{ secrets.SONAR_URL }}
-          sonar-project-key: ${{ secrets.SONAR_PROJECT_KEY }}
+#       - name: ServiceNow DevOps Sonar Scan Results
+#         uses: ServiceNow/servicenow-devops-sonar@main
+#         with:
+#           devops-integration-user-name: ${{ secrets.SN_DEVOPS_USER }}
+#           devops-integration-token: ${{ secrets.SN_DEVOPS_SECRET }}
+#           devops-integration-user-password: ${{ secrets.SN_DEVOPS_PASSWORD }}
+#           instance-url: ${{ secrets.SN_INSTANCE_URL }}
+#           tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
+#           job-name: 'Build'
+#           context-github: ${{ toJSON(github) }}
+#           sonar-host-url: ${{ secrets.SONAR_URL }}
+#           sonar-project-key: ${{ secrets.SONAR_PROJECT_KEY }}
 
 #       - name: ServiceNow Test Action Report
 #         uses: DeepakJanmanchi/servicenow-devops-test-report@main
@@ -85,4 +85,18 @@ jobs:
 #           context-github: ${{ toJSON(github) }}
 #           job-name: 'Build'
 #           xml-report-filename: target/surefire-reports/testng-results.xml
-      
+
+build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: ServiceNow DevOps Sonar Scan Results
+        uses: ServiceNow/servicenow-devops-sonar@v1.39.0
+        with:
+          devops-integration-token: ${{ secrets.SN_DEVOPS_SECRET}}
+          instance-url: ${{ secrets.SN_INSTANCE_URL }}
+          tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
+          context-github: ${{ toJSON(github) }}
+          job-name: 'Build'
+          sonar-host-url: ${{ secrets.SONAR_URL }}
+          sonar-project-key: ${{ secrets.SONAR_PROJECT_KEY }}
